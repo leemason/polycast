@@ -48,11 +48,18 @@ To Optionally set Polycast as your default broadcast events driver set ```polyca
 
 Once installed you create broadcastable events exactly the same as you do now (using the ShouldBroadcast trait), except you have a way to consume those events via browsers without the need for nodejs/redis or an external library to be installed/purchased.
 
-This package doesnt aim to compete with libraries or solutions such as PRedis/SocketIO/Pusher.
+This package doesn't aim to compete with libraries or solutions such as PRedis/SocketIO/Pusher.
 But what it does do is provide a working solution for situations where you can't install nodejs and run a websocket server, or where the cost of services like Pusher aren't feasible.
 
 The package utilizes vanilla javascript timeouts and ajax requests to "simulate" a realtime experience.
 It does so by saving the broadcastable events in the database, via a setTimeout javascript ajax request, polls the packages receiver url and distrubutes the payloads via javascript callbacks.
+
+To add to the simulation of realtime events each event found is parsed from the time its requested, and when the event was fired.
+The difference in seconds is then used to delay the callbacks firing on that specific event.
+
+What this does is prevent every event callback dumping into the dom when the ajax request has completed, but instead fires then in sequence as if it was loading live.
+
+To the user the only real difference to websockets is that they will be a few seconds behind (depending on the polling option provided "default 5 seconds").
 
 I have tried to keep the javascript api similar to current socket solutions to reduce the learning curve.
 
@@ -77,8 +84,18 @@ Here's an example:
             console.log(data);
         });
 
-        //fire when event on channel 2 is received
-        channel2.on('Event2WasFired', function(data){
+        //fire when event on channel 2 is received, optionally accessing the event object
+        channel2.on('Event2WasFired', function(data, event){
+            /*
+                event.id = mysql id
+                event.channels = array of channels
+                event.event = event name
+                event.payload = object containing event data (same as the first data argument)
+                event.created_at = timestamp from mysql
+                event.requested_at = when the ajax request was performed
+                event.delay = the delay in seconds from when the request was made and when the event happened (used internally to delay callbacks)
+            */
+
             var body = document.getElementById('body');
             body.innerHTML = body.innerHTML + JSON.stringify(data);
         });

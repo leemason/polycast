@@ -204,7 +204,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            var channel = response.payloads[payload]['channels'][i];
 	                            //console.log('Polycast channel: ' + channel + ' received event: ' + response.payloads[payload]['event']);
 	                            for(index = 0; index < this.channels[channel].length; ++index){
-	                                this.channels[channel][index].fire(response.payloads[payload]['event'], response.payloads[payload]['payload']);
+	                                console.log(response.payloads[payload]);
+	                                this.channels[channel][index].fire(response.payloads[payload]);
+	                                //this.channels[channel][index].fire(response.payloads[payload]['event'], response.payloads[payload]['payload'], response.payloads[payload]['delay']);
 	                            }
 	                        }
 	                    }
@@ -262,12 +264,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.events[event].push(callback);
 	            return this;
 	        },
-	        fire: function(event, payload){
+	        fire: function(event){
 	            for(var e in this.events){
 	                if (this.events.hasOwnProperty(e)) {
-	                    if(e == event){
+	                    if(e == event.event){
 	                        var func = this.events[e];
-	                        func[0](payload);
+	                        if(event.delay != 0){
+	                            setTimeout(function(){
+	                                func[0](event.payload, event);
+	                            }, (event.delay * 1000));
+	                        }else{
+	                            func[0](event.payload, event);
+	                        }
 	                    }
 	                }
 	            }
