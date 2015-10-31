@@ -93,11 +93,18 @@ Breaking down the example you can see we include the library:
 <script src="<?php echo url('vendor/polycast/polycast.min.js');?>"></script>
 ```
 
-Create a Polycast object inside a self executing function (this can be done a few ways):
+Create a Polycast object inside a self executing function (this can be done a few ways, and has a few options):
 
 ```javascript
 <script>
     (function() {
+
+        //default options
+        defaults = {
+            url: null,
+            token: null,
+            polling: 5 //this is how often in seconds the ajax request is made, make sure its less than the (delete_old * 60) connection config value or events may get deleted before consumed.
+        };
 
         //create the connection
         var poly = new Polycast('http://localhost/polycast', {
@@ -135,5 +142,32 @@ channel1.on('Event1WasFired', function(data){
     console.log(data);//data is a json decoded object of the events properties
 });
 ```
+
+And that's it! (for now)
+
+## FAQ
+
+**Does this require jQuery?**
+Nope, all vanilla js here including the ajax requests.
+
+**What if there is a problem during the request? will my javascript enter a loop?**
+Nope, the next setTimeout call wont happen until the previous one has been compeleted.
+
+**How does it work out what events get sent to who?**
+This is done by the channel and event names, but the package also monitors times.
+When the js service creates a connection the server sends back its current time.
+This is stored in the js object and is sent/updated on subsequent requests creating a "events named ? on channel ? since ?" type database query.
+
+## Notes
+
+The is my first real javascript heavy package, which is great as it gives me more opportunity to learn the language.
+That being said if there are any improvements you could make please let me know or send a pull request.
+
+## The Future
+
+- Add authorization options to channels
+- Add helpers here and there for removing channel/event subscriptions
+- Add wildcard event name listening
+- Possibly update to work via webpack (baby steps at the minute, heck this is my first full vanilla js project)
 
 
