@@ -1,0 +1,30 @@
+{
+  "name": "Polycast",
+  "version": "1.0.0",
+  "description": "Laravel websocket broadcasting polyfill using ajax and mysql.",
+  "main": "assets/js/polycast.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leemason/polycast"
+  },
+  "keywords": [
+    "broadcasting",
+    "laravel",
+    "websocket",
+    "polyfill"
+  ],
+  "author": "Lee Mason",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/leemason/polycast/issues"
+  },
+  "homepage": "https://github.com/leemason/polycast",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.4.2"
+  }
+}
