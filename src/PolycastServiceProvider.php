@@ -25,8 +25,8 @@ class PolycastServiceProvider extends ServiceProvider
         });
 
         $this->publishes([
-            __DIR__.'/../assets/js/polycast.js' => public_path('vendor/polycast/polycast.js'),
-            __DIR__.'/../assets/js/polycast.min.js' => public_path('vendor/polycast/polycast.min.js'),
+            __DIR__.'/../dist/js/polycast.js' => public_path('vendor/polycast/polycast.js'),
+            __DIR__.'/../dist/js/polycast.min.js' => public_path('vendor/polycast/polycast.min.js'),
         ], 'public');
 
         //establish connection and send current time

@@ -1,0 +1,14 @@
+{
+  "name": "leemason/polycast",
+  "main": "dist/js/polycast.js",
+  "description": "Laravel websocket broadcasting polyfill using ajax and mysql.",
+  "authors": ["Lee Mason <contact@nohalfpixels.com>"],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

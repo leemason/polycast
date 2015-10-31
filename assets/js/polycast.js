@@ -218,4 +218,10 @@
         }
     };
 
+    this.Polycast.version = '1.0.0';
+
+    this.PolycastChannel.version = '1.0.0';
+
+    module.exports = this.Polycast;
+
 }());
