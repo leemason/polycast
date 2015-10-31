@@ -145,6 +145,14 @@ channel1.on('Event1WasFired', function(data){
 
 And that's it! (for now)
 
+## Bower Usage
+
+The polycast package is registered on Bower using the name ```leemason-polycast``` and can be installed by running:
+
+```
+bower install leemason-polycast
+```
+
 ## FAQ
 
 **Does this require jQuery?**
