@@ -1,5 +1,5 @@
 {
-  "name": "Polycast",
+  "name": "leemason-polycast",
   "version": "1.0.0",
   "description": "Laravel websocket broadcasting polyfill using ajax and mysql.",
   "main": "dist/js/polycast.min.js",

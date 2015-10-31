@@ -1,0 +1,105 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'publish' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.37
+4 verbose node symlink /usr/bin/node
+5 verbose publish [ '.' ]
+6 verbose cache add [ '.', null ]
+7 verbose cache add name=undefined spec="." args=[".",null]
+8 verbose parsed url { protocol: null,
+8 verbose parsed url   slashes: null,
+8 verbose parsed url   auth: null,
+8 verbose parsed url   host: null,
+8 verbose parsed url   port: null,
+8 verbose parsed url   hostname: null,
+8 verbose parsed url   hash: null,
+8 verbose parsed url   search: null,
+8 verbose parsed url   query: null,
+8 verbose parsed url   pathname: '.',
+8 verbose parsed url   path: '.',
+8 verbose parsed url   href: '.' }
+9 silly lockFile 3a52ce78- .
+10 verbose lock . /home/vagrant/.npm/3a52ce78-.lock
+11 verbose tar pack [ '/home/vagrant/.npm/Polycast/1.0.0/package.tgz', '.' ]
+12 verbose tarball /home/vagrant/.npm/Polycast/1.0.0/package.tgz
+13 verbose folder .
+14 info prepublish Polycast@1.0.0
+15 silly lockFile 1f1177db-tar tar://.
+16 verbose lock tar://. /home/vagrant/.npm/1f1177db-tar.lock
+17 silly lockFile 8b7d0dd5-t-npm-Polycast-1-0-0-package-tgz tar:///home/vagrant/.npm/Polycast/1.0.0/package.tgz
+18 verbose lock tar:///home/vagrant/.npm/Polycast/1.0.0/package.tgz /home/vagrant/.npm/8b7d0dd5-t-npm-Polycast-1-0-0-package-tgz.lock
+19 silly lockFile 1f1177db-tar tar://.
+20 silly lockFile 1f1177db-tar tar://.
+21 silly lockFile 8b7d0dd5-t-npm-Polycast-1-0-0-package-tgz tar:///home/vagrant/.npm/Polycast/1.0.0/package.tgz
+22 silly lockFile 8b7d0dd5-t-npm-Polycast-1-0-0-package-tgz tar:///home/vagrant/.npm/Polycast/1.0.0/package.tgz
+23 silly lockFile ea2810ad-grant-npm-Polycast-1-0-0-package /home/vagrant/.npm/Polycast/1.0.0/package
+24 verbose lock /home/vagrant/.npm/Polycast/1.0.0/package /home/vagrant/.npm/ea2810ad-grant-npm-Polycast-1-0-0-package.lock
+25 silly lockFile ea2810ad-grant-npm-Polycast-1-0-0-package /home/vagrant/.npm/Polycast/1.0.0/package
+26 silly lockFile ea2810ad-grant-npm-Polycast-1-0-0-package /home/vagrant/.npm/Polycast/1.0.0/package
+27 silly lockFile 3a52ce78- .
+28 silly lockFile 3a52ce78- .
+29 silly publish { name: 'Polycast',
+29 silly publish   version: '1.0.0',
+29 silly publish   description: 'Laravel websocket broadcasting polyfill using ajax and mysql.',
+29 silly publish   main: 'dist/js/polycast.min.js',
+29 silly publish   scripts: { test: 'echo "Error: no test specified" && exit 1' },
+29 silly publish   repository: { type: 'git', url: 'https://github.com/leemason/polycast' },
+29 silly publish   keywords: [ 'broadcasting', 'laravel', 'websocket', 'polyfill' ],
+29 silly publish   author: { name: 'Lee Mason' },
+29 silly publish   license: 'MIT',
+29 silly publish   bugs: { url: 'https://github.com/leemason/polycast/issues' },
+29 silly publish   homepage: 'https://github.com/leemason/polycast',
+29 silly publish   devDependencies:
+29 silly publish    { gulp: '^3.9.0',
+29 silly publish      'gulp-rename': '^1.2.2',
+29 silly publish      'gulp-uglify': '^1.4.2',
+29 silly publish      'gulp-util': '^3.0.7',
+29 silly publish      webpack: '^1.12.2' },
+29 silly publish   readme: '## Polycast\n[![Packagist License](https://poser.pugx.org/leemason/polycast/license.png)](http://choosealicense.com/licenses/mit/)\n[![Latest Stable Version](https://poser.pugx.org/leemason/polycast/version.png)](https://packagist.org/packages/leemason/polycast)\n[![Total Downloads](https://poser.pugx.org/leemason/polycast/d/total.png)](https://packagist.org/packages/leemason/polycast)\n\nLaravel Websocket broadcasting polyfill using ajax and mysql. Laravel 5.1 or Later\n\n## Installation\n\nRequire this package with composer:\n\n```\ncomposer require leemason/polycast\n```\n\nAfter updating composer, add the ServiceProvider to the providers array in config/app.php\n\n### Laravel 5.1:\n\n```php\nLeeMason\\Polycast\\PolycastServiceProvider::class,\n```\n\nAdd the following in your broadcasting connections array located in config/broadcasting.php\n\n```php\n\'polycast\' => [\n    \'driver\' => \'polycast\',\n    \'delete_old\' => 2, //this deletes old events after 2 minutes, this can be changed to leave them in the db longer if required.\n]\n```\n\nCopy the package assets to your public folder with the publish command:\n\n```php\nphp artisan vendor:publish --tag=public --force\n```\n\nMigrate the packages database migrations (creates the polycast_events table):\n\n```php\nphp artisan migrate --path=vendor/leemason/polycast/migrations\n```\n\n## Usage\n\nTo Optionally set Polycast as your default broadcast events driver set ```polycast``` as the default in your config/broadcasting.php or ```BROADCAST_DRIVER=polycast``` in your .env file.\n\nOnce installed you create broadcastable events exactly the same as you do now (using the ShouldBroadcast trait), except you have a way to consume those events via browsers without the need for nodejs/redis or an external library to be installed/purchased.\n\nThis package doesnt aim to compete with libraries or solutions such as PRedis/SocketIO/Pusher.\nBut what it does do is provide a working solution for situations where you can\'t install nodejs and run a websocket server, or where the cost of services like Pusher aren\'t feasible.\n\nThe package utilizes vanilla javascript timeouts and ajax requests to "simulate" a realtime experience.\nIt does so by saving the broadcastable events in the database, via a setTimeout javascript ajax request, polls the packages receiver url and distrubutes the payloads via javascript callbacks.\n\nI have tried to keep the javascript api similar to current socket solutions to reduce the learning curve.\n\nHere\'s an example:\n\n```javascript\n<script src="<?php echo url(\'vendor/polycast/polycast.min.js\');?>"></script>\n<script>\n    (function() {\n\n        //create the connection\n        var poly = new Polycast(\'http://localhost/polycast\', {\n            token: \'<?php echo csrf_token();?>\'\n        });\n\n        //subscribe to channel(s)\n        var channel1 = poly.subscribe(\'channel1\');\n        var channel2 = poly.subscribe(\'channel2\');\n\n        //fire when event on channel 1 is received\n        channel1.on(\'Event1WasFired\', function(data){\n            console.log(data);\n        });\n\n        //fire when event on channel 2 is received\n        channel2.on(\'Event2WasFired\', function(data){\n            var body = document.getElementById(\'body\');\n            body.innerHTML = body.innerHTML + JSON.stringify(data);\n        });\n\n    }());\n</script>\n```\n\nBreaking down the example you can see we include the library:\n\n```javascript\n<script src="<?php echo url(\'vendor/polycast/polycast.min.js\');?>"></script>\n```\n\nCreate a Polycast object inside a self executing function (this can be done a few ways, and has a few options):\n\n```javascript\n<script>\n    (function() {\n\n        //default options\n        defaults = {\n            url: null,\n            token: null,\n            polling: 5 //this is how often in seconds the ajax request is made, make sure its less than the (delete_old * 60) connection config value or events may get deleted before consumed.\n        };\n\n        //create the connection\n        var poly = new Polycast(\'http://localhost/polycast\', {\n            token: \'<?php echo csrf_token();?>\'\n        });\n\n        //or like this\n        var poly = new Polycast({\n            url: \'http://localhost/polycast\',\n            token: \'<?php echo csrf_token();?>\'\n        });\n\n        //or like this (but this way we arent using csrf, and i can\'t see a good reason not to)\n        var poly = new Polycast(\'http://localhost/polycast\');\n\n        ....\n\n    }());\n</script>\n```\n\nWe create channel objects by subscribing to the channel:\n\n```javascript\n//subscribe to channel(s)\nvar channel1 = poly.subscribe(\'channel1\');\nvar channel2 = poly.subscribe(\'channel2\');\n```\n\nAnd finally we register callbacks for specific events fired on those channels:\n\n```javascript\n//fire when event on channel 1 is received\nchannel1.on(\'Event1WasFired\', function(data){\n    console.log(data);//data is a json decoded object of the events properties\n});\n```\n\nAnd that\'s it! (for now)\n\n## Bower Usage\n\nThe polycast package is registered on Bower using the name ```leemason-polycast``` and can be installed by running:\n\n```\nbower install leemason-polycast\n```\n\nThe package script can then be accessed from the ```bower_components/leemason-polycast/dist/js/polycast(.min).js``` path.\n\n## Webpack Usage\n\nThe polycast package script files are generated using gulp/webpack, this offers advantages when developing your javascript via script loaders.\n\nUsage is as follows:\n\n```javascript\nvar Polycast = require(\'leemason-polycast\');//this is npm usage, if using bower you will need to provide the full path\nvar poly = new Polycast({...});\n```\n\n## FAQ\n\n**Does this require jQuery?**\n\nNope, all vanilla js here including the ajax requests.\n\n**What if there is a problem during the request? will my javascript enter a loop?**\n\nNope, the next setTimeout call wont happen until the previous one has been compeleted.\n\n**How does it work out what events get sent to who?**\n\nThis is done by the channel and event names, but the package also monitors times.\nWhen the js service creates a connection the server sends back its current time.\nThis is stored in the js object and is sent/updated on subsequent requests creating a "events named ? on channel ? since ?" type database query.\n\n## Notes\n\nThe is my first real javascript heavy package, which is great as it gives me more opportunity to learn the language.\nThat being said if there are any improvements you could make please let me know or send a pull request.\n\n## The Future\n\n- Add authorization options to channels\n- Add helpers here and there for removing channel/event subscriptions\n- Add wildcard event name listening\n- Add ability to subscribe to events without supplying channel.\n\n\n',
+29 silly publish   readmeFilename: 'README.md',
+29 silly publish   gitHead: '383fd138dbded819e3417f095f05e175d96e13ff',
+29 silly publish   _id: 'Polycast@1.0.0',
+29 silly publish   _shasum: '8a72d2ae4f7f674aa73105bd2b5a951a3f1fdb00',
+29 silly publish   _from: '.' }
+30 verbose request where is /Polycast
+31 verbose request registry https://registry.npmjs.org/
+32 verbose request id 6bc2fd0f5dfcf79b
+33 verbose url raw /Polycast
+34 verbose url resolving [ 'https://registry.npmjs.org/', './Polycast' ]
+35 verbose url resolved https://registry.npmjs.org/Polycast
+36 verbose request where is https://registry.npmjs.org/Polycast
+37 info trying registry request attempt 1 at 11:09:16
+38 http PUT https://registry.npmjs.org/Polycast
+39 http 400 https://registry.npmjs.org/Polycast
+40 verbose headers { 'content-type': 'application/json',
+40 verbose headers   'cache-control': 'max-age=60',
+40 verbose headers   'content-length': '54',
+40 verbose headers   'accept-ranges': 'bytes',
+40 verbose headers   date: 'Sat, 31 Oct 2015 11:09:18 GMT',
+40 verbose headers   via: '1.1 varnish',
+40 verbose headers   connection: 'keep-alive',
+40 verbose headers   'x-served-by': 'cache-lhr6328-LHR',
+40 verbose headers   'x-cache': 'MISS',
+40 verbose headers   'x-cache-hits': '0',
+40 verbose headers   'x-timer': 'S1446289756.648667,VS0,VE1454' }
+41 error publish Failed PUT 400
+42 error Error: name can no longer contain capital letters : Polycast
+42 error     at RegClient.<anonymous> (/usr/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:308:14)
+42 error     at Request._callback (/usr/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:246:65)
+42 error     at Request.self.callback (/usr/lib/node_modules/npm/node_modules/request/request.js:236:22)
+42 error     at Request.emit (events.js:98:17)
+42 error     at Request.<anonymous> (/usr/lib/node_modules/npm/node_modules/request/request.js:1142:14)
+42 error     at Request.emit (events.js:117:20)
+42 error     at IncomingMessage.<anonymous> (/usr/lib/node_modules/npm/node_modules/request/request.js:1096:12)
+42 error     at IncomingMessage.emit (events.js:117:20)
+42 error     at _stream_readable.js:944:16
+42 error     at process._tickCallback (node.js:448:13)
+43 error If you need help, you may report this *entire* log,
+43 error including the npm and node versions, at:
+43 error     <http://github.com/npm/npm/issues>
+44 error System Linux 3.13.0-24-generic
+45 error command "/usr/bin/node" "/usr/bin/npm" "publish"
+46 error cwd /home/vagrant/Packages/laravel/packages/leemason/polycast
+47 error node -v v0.10.37
+48 error npm -v 1.4.28
+49 verbose exit [ 1, true ]
