@@ -166,6 +166,8 @@ var Polycast = require('leemason-polycast');//this is npm usage, if using bower 
 var poly = new Polycast({...});
 ```
 
+The package is still in early development (but is stable) so no versions in bower or npm are available yet, just master.
+
 ## FAQ
 
 **Does this require jQuery?**
