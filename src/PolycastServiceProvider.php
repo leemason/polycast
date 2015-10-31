@@ -54,8 +54,8 @@ class PolycastServiceProvider extends ServiceProvider
 
             $collection = collect($query->get());
             $payload = $collection->map(function ($item, $key) use ($request) {
-                $created = \Carbon\Carbon::createFromFormat("Y-m-d h:i:s", $item->created_at);
-                $requested = \Carbon\Carbon::createFromFormat("Y-m-d h:i:s", $request->get('time'));
+                $created = \Carbon\Carbon::createFromFormat("Y-m-d H:i:s", $item->created_at);
+                $requested = \Carbon\Carbon::createFromFormat("Y-m-d H:i:s", $request->get('time'));
                 $item->channels = json_decode($item->channels);
                 $item->payload = json_decode($item->payload);
                 $item->delay = $requested->diffInSeconds($created);

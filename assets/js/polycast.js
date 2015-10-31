@@ -10,6 +10,8 @@
 
         this.connected = false;
 
+        this.events = {};
+
         var defaults = {
             url: null,
             polling: 5,
@@ -49,9 +51,11 @@
                 if (xhr.readyState > 3 && xhr.status === 200) {
                     response = JSON.parse(xhr.responseText);
                     if(response.status == 'success'){
+                        PolycastObject.connected = true;
                         PolycastObject.setTime(response.time);
                         PolycastObject.setTimeout();
                         console.log('Polycast connection established!');
+                        PolycastObject.fire('connect', PolycastObject);
                     }
                 }
             };
@@ -60,6 +64,35 @@
             xhr.send(params);
 
             return this;
+        },
+        reconnect: function(){
+            if(this.connected){
+                return;
+            }
+            this.init();
+        },
+        on: function(event, callback){
+            if(this.events[event] === undefined){
+                this.events[event] = [];
+            }
+            this.events[event].push(callback);
+        },
+        fire: function(event, data){
+            if(this.events[event] === undefined){
+                this.events[event] = [];
+            }
+            for(var callback in this.events[event]){
+                if (this.events[event].hasOwnProperty(callback)) {
+                    var func = this.events[event][callback];
+                    func(data);
+                }
+            }
+        },
+        disconnect: function(){
+            this.connected = false;
+            clearTimeout(this.timeout);
+            this.timeout = null;
+            this.fire('disconnect', this);
         },
         extend: function(source, properties) {
             var property;
@@ -148,7 +181,7 @@
                             var channel = response.payloads[payload]['channels'][i];
                             //console.log('Polycast channel: ' + channel + ' received event: ' + response.payloads[payload]['event']);
                             for(index = 0; index < this.channels[channel].length; ++index){
-                                console.log(response.payloads[payload]);
+                                //console.log(response.payloads[payload]);
                                 this.channels[channel][index].fire(response.payloads[payload]);
                                 //this.channels[channel][index].fire(response.payloads[payload]['event'], response.payloads[payload]['payload'], response.payloads[payload]['delay']);
                             }

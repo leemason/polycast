@@ -75,6 +75,17 @@ Here's an example:
             token: '<?php echo csrf_token();?>'
         });
 
+        //register callbacks for connection events
+        poly.on('connect', function(obj){
+            console.log('connect event fired!');
+            console.log(obj);
+        });
+
+        poly.on('disconnect', function(obj){
+            console.log('disconnect event fired!');
+            console.log(obj);
+        });
+
         //subscribe to channel(s)
         var channel1 = poly.subscribe('channel1');
         var channel2 = poly.subscribe('channel2');
@@ -99,6 +110,13 @@ Here's an example:
             var body = document.getElementById('body');
             body.innerHTML = body.innerHTML + JSON.stringify(data);
         });
+
+
+        //at any point you can disconnect
+        poly.disconnect();
+
+        //and when you disconnect, you can again at any point reconnect
+        poly.reconnect();
 
     }());
 </script>
@@ -143,6 +161,21 @@ Create a Polycast object inside a self executing function (this can be done a fe
 </script>
 ```
 
+We register any callbacks on the connection events:
+
+```javascript
+//register callbacks for connection events
+poly.on('connect', function(obj){
+    console.log('connect event fired!');
+    console.log(obj);
+});
+
+poly.on('disconnect', function(obj){
+    console.log('disconnect event fired!');
+    console.log(obj);
+});
+```
+
 We create channel objects by subscribing to the channel:
 
 ```javascript
@@ -151,13 +184,23 @@ var channel1 = poly.subscribe('channel1');
 var channel2 = poly.subscribe('channel2');
 ```
 
-And finally we register callbacks for specific events fired on those channels:
+And we register callbacks for specific events fired on those channels:
 
 ```javascript
 //fire when event on channel 1 is received
 channel1.on('Event1WasFired', function(data){
     console.log(data);//data is a json decoded object of the events properties
 });
+```
+
+Should something go wrong, or you need to disconnect you can at any point in time:
+
+```javascript
+//at any point you can disconnect
+poly.disconnect();
+
+//and when you disconnect, you can again at any point reconnect
+poly.reconnect();
 ```
 
 And that's it! (for now)
