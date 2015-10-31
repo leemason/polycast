@@ -2,7 +2,7 @@
   "name": "Polycast",
   "version": "1.0.0",
   "description": "Laravel websocket broadcasting polyfill using ajax and mysql.",
-  "main": "assets/js/polycast.js",
+  "main": "dist/js/polycast.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

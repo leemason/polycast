@@ -153,6 +153,19 @@ The polycast package is registered on Bower using the name ```leemason-polycast`
 bower install leemason-polycast
 ```
 
+The package script can then be accessed from the ```bower_components/leemason-polycast/dist/js/polycast(.min).js``` path.
+
+## Webpack Usage
+
+The polycast package script files are generated using gulp/webpack, this offers advantages when developing your javascript via script loaders.
+
+Usage is as follows:
+
+```javascript
+var Polycast = require('leemason-polycast');//this is npm usage, if using bower you will need to provide the full path
+var poly = new Polycast({...});
+```
+
 ## FAQ
 
 **Does this require jQuery?**
@@ -180,6 +193,5 @@ That being said if there are any improvements you could make please let me know 
 - Add helpers here and there for removing channel/event subscriptions
 - Add wildcard event name listening
 - Add ability to subscribe to events without supplying channel.
-- Possibly update to work via webpack (baby steps at the minute, heck this is my first full vanilla js project)
 
 
