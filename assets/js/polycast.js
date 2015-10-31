@@ -33,6 +33,8 @@
 
         this.init();
 
+        return this;
+
     };
 
     this.Polycast.prototype = {
@@ -70,12 +72,14 @@
                 return;
             }
             this.init();
+            return this;
         },
         on: function(event, callback){
             if(this.events[event] === undefined){
                 this.events[event] = [];
             }
             this.events[event].push(callback);
+            return this;
         },
         fire: function(event, data){
             if(this.events[event] === undefined){
@@ -93,6 +97,7 @@
             clearTimeout(this.timeout);
             this.timeout = null;
             this.fire('disconnect', this);
+            return this;
         },
         extend: function(source, properties) {
             var property;
