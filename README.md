@@ -87,4 +87,53 @@ Here's an example:
 </script>
 ```
 
+Breaking down the example you can see we include the library:
+
+```javascript
+<script src="<?php echo url('vendor/polycast/polycast.min.js');?>"></script>
+```
+
+Create a Polycast object inside a self executing function (this can be done a few ways):
+
+```javascript
+<script>
+    (function() {
+
+        //create the connection
+        var poly = new Polycast('http://localhost/polycast', {
+            token: '<?php echo csrf_token();?>'
+        });
+
+        //or like this
+        var poly = new Polycast({
+            url: 'http://localhost/polycast',
+            token: '<?php echo csrf_token();?>'
+        });
+
+        //or like this (but this way we arent using csrf, and i can't see a good reason not to)
+        var poly = new Polycast('http://localhost/polycast');
+
+        ....
+
+    }());
+</script>
+```
+
+We create channel objects by subscribing to the channel:
+
+```javascript
+//subscribe to channel(s)
+var channel1 = poly.subscribe('channel1');
+var channel2 = poly.subscribe('channel2');
+```
+
+And finally we register callbacks for specific events fired on those channels:
+
+```javascript
+//fire when event on channel 1 is received
+channel1.on('Event1WasFired', function(data){
+    console.log(data);//data is a json decoded object of the events properties
+});
+```
+
 
