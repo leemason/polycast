@@ -148,12 +148,15 @@ And that's it! (for now)
 ## FAQ
 
 **Does this require jQuery?**
+
 Nope, all vanilla js here including the ajax requests.
 
 **What if there is a problem during the request? will my javascript enter a loop?**
+
 Nope, the next setTimeout call wont happen until the previous one has been compeleted.
 
 **How does it work out what events get sent to who?**
+
 This is done by the channel and event names, but the package also monitors times.
 When the js service creates a connection the server sends back its current time.
 This is stored in the js object and is sent/updated on subsequent requests creating a "events named ? on channel ? since ?" type database query.
