@@ -171,6 +171,7 @@ That being said if there are any improvements you could make please let me know 
 - Add authorization options to channels
 - Add helpers here and there for removing channel/event subscriptions
 - Add wildcard event name listening
+- Add ability to subscribe to events without supplying channel.
 - Possibly update to work via webpack (baby steps at the minute, heck this is my first full vanilla js project)
 
 
