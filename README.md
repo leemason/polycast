@@ -236,7 +236,7 @@ var Polycast = require('leemason-polycast');//this is npm usage, if using bower 
 var poly = new Polycast({...});
 ```
 
-The package is still in early development (but is stable) so no versions in bower or npm are available yet, just master.
+The package is still in early development (but is stable) so expect new methods and features soon.
 
 ## FAQ
 
@@ -244,7 +244,7 @@ The package is still in early development (but is stable) so no versions in bowe
 
 Nope, all vanilla js here including the ajax requests.
 
-**What if there is a problem during the request? will my javascript enter a loop?**
+**What if there is a problem during the request? Will my javascript enter a loop?**
 
 Nope, the next setTimeout call wont happen until the previous one has been compeleted.
 
