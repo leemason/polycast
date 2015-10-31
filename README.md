@@ -215,6 +215,16 @@ bower install leemason-polycast
 
 The package script can then be accessed from the ```bower_components/leemason-polycast/dist/js/polycast(.min).js``` path.
 
+## NPM Usage
+
+The polycast package is registered on npm using the name ```leemason-polycast``` and can be installed by running:
+
+```
+npm install leemason-polycast
+```
+
+The package script can then be accessed from the ```node_modules/leemason-polycast/dist/js/polycast(.min).js``` path.
+
 ## Webpack Usage
 
 The polycast package script files are generated using gulp/webpack, this offers advantages when developing your javascript via script loaders.
