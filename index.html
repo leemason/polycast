@@ -1,0 +1,293 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Polycast by leemason</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Polycast</h1>
+        <p>Laravel websocket broadcasting polyfill using ajax and mysql.</p>
+
+        <p class="view"><a href="https://github.com/leemason/polycast">View the Project on GitHub <small>leemason/polycast</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/leemason/polycast/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/leemason/polycast/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/leemason/polycast">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h2>
+<a id="polycast" class="anchor" href="#polycast" aria-hidden="true"><span class="octicon octicon-link"></span></a>Polycast</h2>
+
+<p><a href="http://choosealicense.com/licenses/mit/"><img src="https://poser.pugx.org/leemason/polycast/license.png" alt="Packagist License"></a>
+<a href="https://packagist.org/packages/leemason/polycast"><img src="https://poser.pugx.org/leemason/polycast/version.png" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/leemason/polycast"><img src="https://poser.pugx.org/leemason/polycast/d/total.png" alt="Total Downloads"></a></p>
+
+<p>Laravel Websocket broadcasting polyfill using ajax and mysql. Laravel 5.1 or Later</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Require this package with composer:</p>
+
+<pre><code>composer require leemason/polycast
+</code></pre>
+
+<p>After updating composer, add the ServiceProvider to the providers array in config/app.php</p>
+
+<h3>
+<a id="laravel-51" class="anchor" href="#laravel-51" aria-hidden="true"><span class="octicon octicon-link"></span></a>Laravel 5.1:</h3>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c1">LeeMason\Polycast\</span><span class="pl-c1">PolycastServiceProvider</span><span class="pl-k">::</span><span class="pl-c1">class</span>,</span></pre></div>
+
+<p>Add the following in your broadcasting connections array located in config/broadcasting.php</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-s"><span class="pl-pds">'</span>polycast<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>driver<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>polycast<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>delete_old<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">2</span>, <span class="pl-c">//this deletes old events after 2 minutes, this can be changed to leave them in the db longer if required.</span></span>
+<span class="pl-s1">]</span></pre></div>
+
+<p>Copy the package assets to your public folder with the publish command:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c1">php</span> <span class="pl-c1">artisan</span> <span class="pl-c1">vendor</span>:<span class="pl-c1">publish</span> <span class="pl-k">--</span><span class="pl-c1">tag</span><span class="pl-k">=</span><span class="pl-k">public</span> <span class="pl-k">--</span><span class="pl-c1">force</span></span></pre></div>
+
+<p>Migrate the packages database migrations (creates the polycast_events table):</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c1">php</span> <span class="pl-c1">artisan</span> <span class="pl-c1">migrate</span> <span class="pl-k">--</span><span class="pl-c1">path</span><span class="pl-k">=</span><span class="pl-c1">vendor</span><span class="pl-k">/</span><span class="pl-c1">leemason</span><span class="pl-k">/</span><span class="pl-c1">polycast</span><span class="pl-k">/</span><span class="pl-c1">migrations</span></span></pre></div>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>To Optionally set Polycast as your default broadcast events driver set <code>polycast</code> as the default in your config/broadcasting.php or <code>BROADCAST_DRIVER=polycast</code> in your .env file.</p>
+
+<p>Once installed you create broadcastable events exactly the same as you do now (using the ShouldBroadcast trait), except you have a way to consume those events via browsers without the need for nodejs/redis or an external library to be installed/purchased.</p>
+
+<p>This package doesn't aim to compete with libraries or solutions such as PRedis/SocketIO/Pusher.
+But what it does do is provide a working solution for situations where you can't install nodejs and run a websocket server, or where the cost of services like Pusher aren't feasible.</p>
+
+<p>The package utilizes vanilla javascript timeouts and ajax requests to "simulate" a realtime experience.
+It does so by saving the broadcastable events in the database, via a setTimeout javascript ajax request, polls the packages receiver url and distrubutes the payloads via javascript callbacks.</p>
+
+<p>To add to the simulation of realtime events each event found is parsed from the time its requested, and when the event was fired.
+The difference in seconds is then used to delay the callbacks firing on that specific event.</p>
+
+<p>What this does is prevent every event callback dumping into the dom when the ajax request has completed, but instead fires then in sequence as if it was loading live.</p>
+
+<p>To the user the only real difference to websockets is that they will be a few seconds behind (depending on the polling option provided "default 5 seconds").</p>
+
+<p>I have tried to keep the javascript api similar to current socket solutions to reduce the learning curve.</p>
+
+<p>Here's an example:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">&lt;</span>script src<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>&lt;?php echo url('vendor/polycast/polycast.min.js');?&gt;<span class="pl-pds">"</span></span><span class="pl-k">&gt;&lt;/</span>script<span class="pl-k">&gt;</span>
+<span class="pl-k">&lt;</span>script<span class="pl-k">&gt;</span>
+    (<span class="pl-k">function</span>() {
+
+        <span class="pl-c">//create the connection</span>
+        <span class="pl-k">var</span> poly <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Polycast</span>(<span class="pl-s"><span class="pl-pds">'</span>http://localhost/polycast<span class="pl-pds">'</span></span>, {
+            token<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;?php echo csrf_token();?&gt;<span class="pl-pds">'</span></span>
+        });
+
+        <span class="pl-c">//register callbacks for connection events</span>
+        poly.on(<span class="pl-s"><span class="pl-pds">'</span>connect<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">obj</span>){
+            <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">'</span>connect event fired!<span class="pl-pds">'</span></span>);
+            <span class="pl-en">console</span>.<span class="pl-c1">log</span>(obj);
+        });
+
+        poly.on(<span class="pl-s"><span class="pl-pds">'</span>disconnect<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">obj</span>){
+            <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">'</span>disconnect event fired!<span class="pl-pds">'</span></span>);
+            <span class="pl-en">console</span>.<span class="pl-c1">log</span>(obj);
+        });
+
+        <span class="pl-c">//subscribe to channel(s)</span>
+        <span class="pl-k">var</span> channel1 <span class="pl-k">=</span> poly.subscribe(<span class="pl-s"><span class="pl-pds">'</span>channel1<span class="pl-pds">'</span></span>);
+        <span class="pl-k">var</span> channel2 <span class="pl-k">=</span> poly.subscribe(<span class="pl-s"><span class="pl-pds">'</span>channel2<span class="pl-pds">'</span></span>);
+
+        <span class="pl-c">//fire when event on channel 1 is received</span>
+        channel1.on(<span class="pl-s"><span class="pl-pds">'</span>Event1WasFired<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">data</span>){
+            <span class="pl-en">console</span>.<span class="pl-c1">log</span>(data);
+        });
+
+        <span class="pl-c">//fire when event on channel 2 is received, optionally accessing the event object</span>
+        channel2.on(<span class="pl-s"><span class="pl-pds">'</span>Event2WasFired<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">data</span>, <span class="pl-smi">event</span>){
+            <span class="pl-c">/*</span>
+<span class="pl-c">                event.id = mysql id</span>
+<span class="pl-c">                event.channels = array of channels</span>
+<span class="pl-c">                event.event = event name</span>
+<span class="pl-c">                event.payload = object containing event data (same as the first data argument)</span>
+<span class="pl-c">                event.created_at = timestamp from mysql</span>
+<span class="pl-c">                event.requested_at = when the ajax request was performed</span>
+<span class="pl-c">                event.delay = the delay in seconds from when the request was made and when the event happened (used internally to delay callbacks)</span>
+<span class="pl-c">            */</span>
+
+            <span class="pl-k">var</span> body <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">'</span>body<span class="pl-pds">'</span></span>);
+            body.innerHTML <span class="pl-k">=</span> body.innerHTML <span class="pl-k">+</span> <span class="pl-c1">JSON</span>.stringify(data);
+        });
+
+
+        <span class="pl-c">//at any point you can disconnect</span>
+        poly.disconnect();
+
+        <span class="pl-c">//and when you disconnect, you can again at any point reconnect</span>
+        poly.reconnect();
+
+    }());
+<span class="pl-k">&lt;/</span>script<span class="pl-k">&gt;</span></pre></div>
+
+<p>Breaking down the example you can see we include the library:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">&lt;</span>script src<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>&lt;?php echo url('vendor/polycast/polycast.min.js');?&gt;<span class="pl-pds">"</span></span><span class="pl-k">&gt;&lt;/</span>script<span class="pl-k">&gt;</span></pre></div>
+
+<p>Create a Polycast object inside a self executing function (this can be done a few ways, and has a few options):</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">&lt;</span>script<span class="pl-k">&gt;</span>
+    (<span class="pl-k">function</span>() {
+
+        <span class="pl-c">//default options</span>
+        defaults <span class="pl-k">=</span> {
+            url<span class="pl-k">:</span> <span class="pl-c1">null</span>,
+            token<span class="pl-k">:</span> <span class="pl-c1">null</span>,
+            polling<span class="pl-k">:</span> <span class="pl-c1">5</span> <span class="pl-c">//this is how often in seconds the ajax request is made, make sure its less than the (delete_old * 60) connection config value or events may get deleted before consumed.</span>
+        };
+
+        <span class="pl-c">//create the connection</span>
+        <span class="pl-k">var</span> poly <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Polycast</span>(<span class="pl-s"><span class="pl-pds">'</span>http://localhost/polycast<span class="pl-pds">'</span></span>, {
+            token<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;?php echo csrf_token();?&gt;<span class="pl-pds">'</span></span>
+        });
+
+        <span class="pl-c">//or like this</span>
+        <span class="pl-k">var</span> poly <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Polycast</span>({
+            url<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>http://localhost/polycast<span class="pl-pds">'</span></span>,
+            token<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;?php echo csrf_token();?&gt;<span class="pl-pds">'</span></span>
+        });
+
+        <span class="pl-c">//or like this (but this way we arent using csrf, and i can't see a good reason not to)</span>
+        <span class="pl-k">var</span> poly <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Polycast</span>(<span class="pl-s"><span class="pl-pds">'</span>http://localhost/polycast<span class="pl-pds">'</span></span>);
+
+        ....
+
+    }());
+<span class="pl-k">&lt;/</span>script<span class="pl-k">&gt;</span></pre></div>
+
+<p>We register any callbacks on the connection events:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">//register callbacks for connection events</span>
+poly.on(<span class="pl-s"><span class="pl-pds">'</span>connect<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">obj</span>){
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">'</span>connect event fired!<span class="pl-pds">'</span></span>);
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(obj);
+});
+
+poly.on(<span class="pl-s"><span class="pl-pds">'</span>disconnect<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">obj</span>){
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">'</span>disconnect event fired!<span class="pl-pds">'</span></span>);
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(obj);
+});</pre></div>
+
+<p>We create channel objects by subscribing to the channel:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">//subscribe to channel(s)</span>
+<span class="pl-k">var</span> channel1 <span class="pl-k">=</span> poly.subscribe(<span class="pl-s"><span class="pl-pds">'</span>channel1<span class="pl-pds">'</span></span>);
+<span class="pl-k">var</span> channel2 <span class="pl-k">=</span> poly.subscribe(<span class="pl-s"><span class="pl-pds">'</span>channel2<span class="pl-pds">'</span></span>);</pre></div>
+
+<p>And we register callbacks for specific events fired on those channels:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">//fire when event on channel 1 is received</span>
+channel1.on(<span class="pl-s"><span class="pl-pds">'</span>Event1WasFired<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">data</span>){
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(data);<span class="pl-c">//data is a json decoded object of the events properties</span>
+});</pre></div>
+
+<p>Should something go wrong, or you need to disconnect you can at any point in time:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">//at any point you can disconnect</span>
+poly.disconnect();
+
+<span class="pl-c">//and when you disconnect, you can again at any point reconnect</span>
+poly.reconnect();</pre></div>
+
+<p>And that's it! (for now)</p>
+
+<h2>
+<a id="bower-usage" class="anchor" href="#bower-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bower Usage</h2>
+
+<p>The polycast package is registered on Bower using the name <code>leemason-polycast</code> and can be installed by running:</p>
+
+<pre><code>bower install leemason-polycast
+</code></pre>
+
+<p>The package script can then be accessed from the <code>bower_components/leemason-polycast/dist/js/polycast(.min).js</code> path.</p>
+
+<h2>
+<a id="npm-usage" class="anchor" href="#npm-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>NPM Usage</h2>
+
+<p>The polycast package is registered on npm using the name <code>leemason-polycast</code> and can be installed by running:</p>
+
+<pre><code>npm install leemason-polycast
+</code></pre>
+
+<p>The package script can then be accessed from the <code>node_modules/leemason-polycast/dist/js/polycast(.min).js</code> path.</p>
+
+<h2>
+<a id="webpack-usage" class="anchor" href="#webpack-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Webpack Usage</h2>
+
+<p>The polycast package script files are generated using gulp/webpack, this offers advantages when developing your javascript via script loaders.</p>
+
+<p>Usage is as follows:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> Polycast <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>leemason-polycast<span class="pl-pds">'</span></span>);<span class="pl-c">//this is npm usage, if using bower you will need to provide the full path</span>
+<span class="pl-k">var</span> poly <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Polycast</span>({...});</pre></div>
+
+<p>The package is still in early development (but is stable) so expect new methods and features soon.</p>
+
+<h2>
+<a id="faq" class="anchor" href="#faq" aria-hidden="true"><span class="octicon octicon-link"></span></a>FAQ</h2>
+
+<p><strong>Does this require jQuery?</strong></p>
+
+<p>Nope, all vanilla js here including the ajax requests.</p>
+
+<p><strong>What if there is a problem during the request? Will my javascript enter a loop?</strong></p>
+
+<p>Nope, the next setTimeout call wont happen until the previous one has been compeleted.</p>
+
+<p><strong>How does it work out what events get sent to who?</strong></p>
+
+<p>This is done by the channel and event names, but the package also monitors times.
+When the js service creates a connection the server sends back its current time.
+This is stored in the js object and is sent/updated on subsequent requests creating a "events named ? on channel ? since ?" type database query.</p>
+
+<h2>
+<a id="notes" class="anchor" href="#notes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Notes</h2>
+
+<p>The is my first real javascript heavy package, which is great as it gives me more opportunity to learn the language.
+That being said if there are any improvements you could make please let me know or send a pull request.</p>
+
+<h2>
+<a id="the-future" class="anchor" href="#the-future" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Future</h2>
+
+<ul>
+<li>Add authorization options to channels</li>
+<li>Add helpers here and there for removing channel/event subscriptions</li>
+<li>Add wildcard event name listening</li>
+<li>Add ability to subscribe to events without supplying channel.</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/leemason">leemason</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
