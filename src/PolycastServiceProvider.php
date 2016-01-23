@@ -29,6 +29,10 @@ class PolycastServiceProvider extends ServiceProvider
             __DIR__.'/../dist/js/polycast.min.js' => public_path('vendor/polycast/polycast.min.js'),
         ], 'public');
 
+        $this->publishes([
+            __DIR__.'/../database/migrations/' => database_path('migrations')
+        ], 'migrations');
+
         //establish connection and send current time
         $this->app['router']->post('polycast/connect', function(){
             return ['status' => 'success', 'time' => Carbon::now()->toDateTimeString()];
