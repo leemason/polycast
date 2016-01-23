@@ -30,7 +30,7 @@ class PolycastServiceProvider extends ServiceProvider
         ], 'public');
 
         $this->publishes([
-            __DIR__.'/../database/migrations/' => database_path('migrations')
+            __DIR__.'/../migrations/' => database_path('migrations')
         ], 'migrations');
 
         //establish connection and send current time
