@@ -44,7 +44,7 @@ class PolycastServiceProvider extends ServiceProvider
             $query = $this->app['db']->table('polycast_events')
                 ->select('*');
 
-            $channels = $request->get('channels');
+            $channels = $request->get('channels', []);
 
             foreach($channels as $channel => $events){
                 foreach($events as $event) {
